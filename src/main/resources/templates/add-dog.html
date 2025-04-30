@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Add dog</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            padding: 20px;
+        }
+
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        form {
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        label {
+            display: block;
+            margin: 10px 0 5px;
+            font-weight: bold;
+        }
+
+        input[type="text"], input[type="number"], input[type="date"], select {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+            font-size: 14px;
+        }
+
+        input[type="checkbox"] {
+            margin-right: 10px;
+        }
+
+        button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            width: 100%;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        .section {
+            margin-bottom: 20px;
+        }
+
+        .section h3 {
+            margin-top: 0;
+            color: #4CAF50;
+        }
+
+        .required-label::before {
+            content: " *";
+            color: red;
+        }
+    </style>
+</head>
+<body>
+
+<h1>Add a new dog</h1>
+
+<form th:action="@{/add}" th:object="${dog}" method="post">
+    <div class="section">
+        <h3>Main Info</h3>
+        <label for="name" class="required-label">Name:</label>
+        <input type="text" id="name" th:field="*{name}" placeholder="Enter name" required="required" />
+
+        <label class="required-label">Gender:
+            <input type="radio" th:field="*{gender}" value="MALE" /> Male
+            <input type="radio" th:field="*{gender}" value="FEMALE" /> Female
+        </label><br/>
+
+        <label for="weight" class="required-label">Weight:</label>
+        <input type="number" id="weight" step="0.1" th:field="*{weight}" placeholder="Enter weight" required="required"/>
+
+        <label for="specialnotes">Special Notes:</label>
+        <input type="text" id="specialnotes" th:field="*{specialnotes}" placeholder="Enter special notes" />
+
+        <label for="dateofarrival" class="required-label">Date of Arrival:</label>
+        <input type="date" id="dateofarrival" th:field="*{dateofarrival}" required="required"/>
+
+        <label for="availableforadoption" class="required-label">
+            Available for Adoption:
+            <input type="checkbox" id="availableforadoption" th:field="*{availableforadoption}" required="required" />
+        </label>
+    </div>
+
+    <div class="section">
+        <h3>Characteristics:</h3>
+        <label for="color" class="required-label">Color:</label>
+        <input type="text" id="color" th:field="*{color}" placeholder="Enter color" required="required"/>
+
+        <label for="furtypeid" class="required-label">Fur Type:</label>
+        <select id="furtypeid" th:field="*{furtypeid}" required="required">
+            <option value="" disabled selected>Choose fur type</option>
+            <option th:each="fur : ${furTypes}"
+                    th:value="${fur.id}"
+                    th:text="${fur.name}">Fur Type</option>
+        </select>
+
+        <label for="sizeid" class="required-label">Size:</label>
+        <select id="sizeid" th:field="*{sizeid}" required="required">
+            <option value="" disabled selected>Choose size</option>
+            <option th:each="size : ${sizes}"
+                    th:value="${size.id}"
+                    th:text="${size.name}">Size</option>
+        </select>
+
+        <label for="breedid" class="required-label">Breed:</label>
+        <select id="breedid" th:field="*{breedid}" required="required">
+            <option value="" disabled selected>Choose breed</option>
+            <option th:each="breed : ${breeds}"
+                    th:value="${breed.id}"
+                    th:text="${breed.name}">Breed</option>
+        </select>
+    </div>
+
+    <button type="submit">Zapisz</button>
+</form>
+
+</body>
+</html>

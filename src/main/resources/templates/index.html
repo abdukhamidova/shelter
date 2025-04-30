@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>List of dogs</title>
+    <style>
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+        }
+
+        th {
+            background-color: #f2f2f2;
+            text-align: left;
+        }
+
+        .add-button {
+            margin: 20px 0;
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            border-radius: 4px;
+        }
+
+        .add-button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+
+<h1>Dogs in shelter</h1>
+
+<!-- Add Dog button -->
+<form th:action="@{/add}" method="get">
+    <button type="submit" class="add-button">Add a dog</button>
+</form>
+
+<!-- Dog Table -->
+<table>
+    <thead>
+    <tr>
+        <th>Name</th>
+        <th>Gender</th>
+        <th>Weight</th>
+        <th>Special Notes</th>
+        <th>Date of Arrival</th>
+        <th>Available for Adoption</th>
+        <th>Color</th>
+        <th>Fur Type</th>
+        <th>Size</th>
+        <th>Breed</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="view : ${dogViews}">
+        <td th:text="${view['dog'].name}">Name</td>
+        <td th:text="${view['dog'].gender}">Gender</td>
+        <td th:text="${view['dog'].weight}+' kg'">Weight</td>
+        <td th:text="${view['dog'].specialnotes}">Special Notes</td>
+        <td th:text="${#dates.format(view['dog'].dateofarrival, 'yyyy-MM-dd')}">Date of Arrival</td>
+        <td th:text="${view['dog'].availableforadoption ? 'Yes' : 'No'}">Available for Adoption</td>
+        <td th:text="${view['dog'].color}">Color</td>
+        <td th:text="${view['furType'].name}">Fur Type</td>
+        <td th:text="${view['size'].name}">Size</td>
+        <td th:text="${view['breed'].name}">Breed</td>
+    </tr>
+
+
+    </tbody>
+</table>
+
+</body>
+</html>

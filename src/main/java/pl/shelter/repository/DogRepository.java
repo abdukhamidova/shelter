@@ -13,9 +13,9 @@ public class DogRepository {
     @Autowired
     JdbcTemplate jdbcTemplate;
 
-    public List<Dog> getDogs() {
+    public List<Dog> getAll() {
         return jdbcTemplate.query(
-                "SELECT idnumber, name, gender, weight, specialnotes, dateofarrival, availableforadoption, room_number, color_id, furtype_id, size_id, breed_id, assignedemployee_id " +
+                "SELECT id, name, gender, weight, specialnotes, dateofarrival, availableforadoption, color, furtypeid, sizeid, breedid " +
                     "FROM dog",
                 BeanPropertyRowMapper.newInstance(Dog.class));
     }
@@ -23,9 +23,9 @@ public class DogRepository {
     public int addDog(Dog dog) {
         jdbcTemplate.update(
                 "INSERT INTO dog " +
-                "(name, gender, weight, specialnotes, dateofarrival, availableforadoption, room_number, color_id, furtype_id, size_id, breed_id, assignedemployee_id)" +
-                " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
-            dog.getName(), dog.getGender(), dog.getWeight(), dog.getSpecialNotes(), dog.getDateOfArrival(), dog.getAvailableForAdoption(), dog.getRoomNumber(), dog.getColorId(), dog.getFurTypeId(), dog.getSizeId(), dog.getBreedId(), dog.getAssignedEmployeeId());
+                "(name, gender, weight, specialnotes, dateofarrival, availableforadoption, color, furtypeid, sizeid, breedid)" +
+                " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+            dog.getName(), dog.getGender(), dog.getWeight(), dog.getSpecialnotes(), dog.getDateofarrival(), dog.getAvailableforadoption(),  dog.getColor(), dog.getFurtypeid(), dog.getSizeid(), dog.getBreedid());
 
         return 1;
     }
