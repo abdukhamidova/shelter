@@ -59,4 +59,23 @@ public class DogController {
         dogRepository.addDog(dog); // or add logic to map related entities
         return "redirect:/"; // redirect to home page
     }
+
+
+    @GetMapping("/dogs/{id}")
+    public String viewDogDetails(@PathVariable int id, Model model) {
+        Dog dog = dogRepository.findById(id);
+        model.addAttribute("dog", dog);
+        model.addAttribute("furTypes", furTypeRepository.getAll());
+        model.addAttribute("sizes", sizeRepository.getAll());
+        model.addAttribute("breeds", breedRepository.getAll());
+        return "dog-details";
+    }
+
+
+    @PostMapping("/edit")
+    public String editDog(@ModelAttribute Dog dog) {
+        dogRepository.updateDog(dog);
+        return "redirect:/dogs/" + dog.getId();
+    }
+
 }

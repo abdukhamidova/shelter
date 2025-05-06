@@ -29,4 +29,26 @@ public class DogRepository {
 
         return 1;
     }
+    public Dog findById(int id) {
+        String sql = "SELECT * FROM dog WHERE id = ?";
+        return jdbcTemplate.queryForObject(sql, new DogRowMapper(), id);
+    }
+
+    public void updateDog(Dog dog) {
+        String sql = "UPDATE dog SET name = ?, gender = ?, weight = ?, specialnotes = ?, dateofarrival = ?, availableforadoption = ?, color = ?, furtypeid = ?, sizeid = ?, breedid = ? WHERE id = ?";
+        jdbcTemplate.update(sql,
+                dog.getName(),
+                dog.getGender(),
+                dog.getWeight(),
+                dog.getSpecialnotes(),
+                dog.getDateofarrival(),
+                dog.getAvailableforadoption(),
+                dog.getColor(),
+                dog.getFurtypeid(),
+                dog.getSizeid(),
+                dog.getBreedid(),
+                dog.getId()
+        );
+    }
+
 }

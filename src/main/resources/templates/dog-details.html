@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Dog Details</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f9;
+      padding: 20px;
+    }
+
+    .header {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+    }
+
+    .gear {
+      position: absolute;
+      right: 0;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 24px;
+      cursor: pointer;
+      color: #4CAF50;
+    }
+
+    h1 {
+      color: #333;
+      margin-bottom: 20px;
+    }
+
+    form {
+      background-color: #ffffff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      max-width: 500px;
+      margin: 0 auto;
+    }
+
+    label {
+      display: block;
+      margin: 10px 0 5px;
+      font-weight: bold;
+    }
+
+    input[type="text"], input[type="number"], input[type="date"], select {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 15px;
+      border-radius: 4px;
+      border: 1px solid #ddd;
+      font-size: 14px;
+    }
+
+    input[type="checkbox"] {
+      margin-right: 10px;
+    }
+
+    button {
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      font-size: 16px;
+      border-radius: 4px;
+      cursor: pointer;
+      width: 100%;
+    }
+
+    button:hover {
+      background-color: #45a049;
+    }
+
+    .section {
+      margin-bottom: 20px;
+    }
+
+    .section h3 {
+      margin-top: 0;
+      color: #4CAF50;
+    }
+
+    .required-label::before {
+      content: " *";
+      color: red;
+    }
+
+    .hidden {
+      display: none;
+    }
+  </style>
+  <script>
+    function setInitialReadOnly() {
+      const form = document.querySelector('form');
+      const inputs = form.querySelectorAll('input, select');
+      inputs.forEach(input => {
+        if (input.type !== 'hidden') {
+          input.setAttribute('readonly', 'readonly');
+          if (input.type === 'checkbox' || input.type === 'radio' || input.tagName === 'SELECT') {
+            input.setAttribute('disabled', 'disabled');
+          }
+        }
+      });
+    }
+
+    function toggleEditMode() {
+      const form = document.querySelector('form');
+      form.classList.toggle('edit-mode');
+
+      const inputs = form.querySelectorAll('input, select');
+      inputs.forEach(input => {
+        if (input.type !== 'hidden') {
+          const isRadio = input.type === 'radio';
+          const isCheckbox = input.type === 'checkbox';
+
+          if (form.classList.contains('edit-mode')) {
+            input.removeAttribute('readonly');
+            if (isCheckbox || isRadio || input.tagName === 'SELECT') {
+              input.removeAttribute('disabled');
+            }
+          } else {
+            input.setAttribute('readonly', 'readonly');
+            if (isCheckbox || isRadio || input.tagName === 'SELECT') {
+              input.setAttribute('disabled', 'disabled');
+            }
+          }
+        }
+      });
+
+      document.getElementById('editBtn').classList.toggle('hidden');
+    }
+
+    window.addEventListener('DOMContentLoaded', setInitialReadOnly);
+  </script>
+</head>
+<body>
+
+<div class="header">
+  <h1 th:text="${dog.name}"></h1>
+  <span class="gear" onclick="toggleEditMode()">&#9881;</span>
+</div>
+
+<form th:action="@{/edit}" method="post" th:object="${dog}">
+  <input type="hidden" th:field="*{id}" />
+
+  <div class="section">
+    <h3>Main Info</h3>
+    <label for="name" class="required-label">Name:</label>
+    <input type="text" id="name" th:field="*{name}" />
+
+    <label class="required-label">Gender:
+      <input type="radio" th:field="*{gender}" value="MALE" /> Male
+      <input type="radio" th:field="*{gender}" value="FEMALE" /> Female
+    </label><br/>
+
+    <label for="weight" class="required-label">Weight:</label>
+    <input type="number" id="weight" step="0.1" th:field="*{weight}" />
+
+    <label for="specialnotes">Special Notes:</label>
+    <input type="text" id="specialnotes" th:field="*{specialnotes}" />
+
+    <label for="dateofarrival" class="required-label">Date of Arrival:</label>
+    <input type="date" id="dateofarrival" th:field="*{dateofarrival}" />
+
+    <label>
+      <input type="checkbox" id="availableforadoption" th:field="*{availableforadoption}" /> Available for Adoption
+    </label>
+  </div>
+
+  <div class="section">
+    <h3>Characteristics</h3>
+    <label for="color" class="required-label">Color:</label>
+    <input type="text" id="color" th:field="*{color}" />
+
+    <label for="furtypeid" class="required-label">Fur Type:</label>
+    <select id="furtypeid" th:field="*{furtypeid}">
+      <option th:each="fur : ${furTypes}"
+              th:value="${fur.id}"
+              th:text="${fur.name}"
+              th:selected="${fur.id == dog.furtypeid}"></option>
+    </select>
+
+    <label for="sizeid" class="required-label">Size:</label>
+    <select id="sizeid" th:field="*{sizeid}">
+      <option th:each="size : ${sizes}"
+              th:value="${size.id}"
+              th:text="${size.name}"
+              th:selected="${size.id == dog.sizeid}"></option>
+    </select>
+
+    <label for="breedid" class="required-label">Breed:</label>
+    <select id="breedid" th:field="*{breedid}">
+      <option th:each="breed : ${breeds}"
+              th:value="${breed.id}"
+              th:text="${breed.name}"
+              th:selected="${breed.id == dog.breedid}"></option>
+    </select>
+  </div>
+
+  <button type="submit" id="editBtn" class="hidden">Zapisz</button>
+</form>
+
+</body>
+</html>
