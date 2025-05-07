@@ -15,13 +15,13 @@ public class SizeRepository {
 
     public List<Size> getAll() {
         return jdbcTemplate.query(
-                "SELECT id, name " +
+                "SELECT id, name, description " +
                         "FROM size",
                 BeanPropertyRowMapper.newInstance(Size.class));
     }
     public Size findById(int sizeId) {
         return jdbcTemplate.queryForObject(
-                "SELECT id, name " +
+                "SELECT id, name, description " +
                         "FROM size " +
                         "WHERE id = ?",
                 BeanPropertyRowMapper.newInstance(Size.class), sizeId);

@@ -16,13 +16,13 @@ public class FurTypeRepository {
 
     public List<FurType> getAll() {
         return jdbcTemplate.query(
-                "SELECT id, name " +
+                "SELECT id, name, description " +
                         "FROM furtype",
                 BeanPropertyRowMapper.newInstance(FurType.class));
     }
     public FurType findById(int furTypeId) {
         return jdbcTemplate.queryForObject(
-                "SELECT id, name " +
+                "SELECT id, name, description " +
                         "FROM furtype " +
                         "WHERE id = ?",
                 BeanPropertyRowMapper.newInstance(FurType.class), furTypeId);

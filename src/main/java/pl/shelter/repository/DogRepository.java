@@ -15,7 +15,7 @@ public class DogRepository {
 
     public List<Dog> getAll() {
         return jdbcTemplate.query(
-                "SELECT id, name, gender, weight, specialnotes, dateofarrival, availableforadoption, color, furtypeid, sizeid, breedid " +
+                "SELECT id, name, gender, weight, specialnotes, dateofarrival, color, furtypeid, sizeid, breedid, adopterid " +
                     "FROM dog",
                 BeanPropertyRowMapper.newInstance(Dog.class));
     }
@@ -23,9 +23,9 @@ public class DogRepository {
     public int addDog(Dog dog) {
         jdbcTemplate.update(
                 "INSERT INTO dog " +
-                "(name, gender, weight, specialnotes, dateofarrival, availableforadoption, color, furtypeid, sizeid, breedid)" +
+                "(name, gender, weight, specialnotes, dateofarrival, color, furtypeid, sizeid, breedid, adopterid)" +
                 " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
-            dog.getName(), dog.getGender(), dog.getWeight(), dog.getSpecialnotes(), dog.getDateofarrival(), dog.getAvailableforadoption(),  dog.getColor(), dog.getFurtypeid(), dog.getSizeid(), dog.getBreedid());
+            dog.getName(), dog.getGender(), dog.getWeight(), dog.getSpecialnotes(), dog.getDateofarrival(),  dog.getColor(), dog.getFurtypeid(), dog.getSizeid(), dog.getBreedid(), dog.getAdopterid());
 
         return 1;
     }
@@ -35,18 +35,18 @@ public class DogRepository {
     }
 
     public void updateDog(Dog dog) {
-        String sql = "UPDATE dog SET name = ?, gender = ?, weight = ?, specialnotes = ?, dateofarrival = ?, availableforadoption = ?, color = ?, furtypeid = ?, sizeid = ?, breedid = ? WHERE id = ?";
+        String sql = "UPDATE dog SET name = ?, gender = ?, weight = ?, specialnotes = ?, dateofarrival = ?, color = ?, furtypeid = ?, sizeid = ?, breedid = ?, adopterid = ? WHERE id = ?";
         jdbcTemplate.update(sql,
                 dog.getName(),
                 dog.getGender(),
                 dog.getWeight(),
                 dog.getSpecialnotes(),
                 dog.getDateofarrival(),
-                dog.getAvailableforadoption(),
                 dog.getColor(),
                 dog.getFurtypeid(),
                 dog.getSizeid(),
                 dog.getBreedid(),
+                dog.getAdopterid(),
                 dog.getId()
         );
     }

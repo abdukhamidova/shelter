@@ -16,11 +16,11 @@ public class DogRowMapper implements RowMapper<Dog> {
         dog.setWeight(rs.getDouble("weight"));
         dog.setSpecialnotes(rs.getString("specialnotes"));
         dog.setDateofarrival(rs.getDate("dateofarrival"));
-        dog.setAvailableforadoption(rs.getBoolean("availableforadoption"));
         dog.setColor(rs.getString("color"));
         dog.setFurtypeid(rs.getInt("furtypeid"));
         dog.setSizeid(rs.getInt("sizeid"));
         dog.setBreedid(rs.getInt("breedid"));
+        dog.setAdopterid(rs.getInt("adopterid"));
         return dog;
     }
 }

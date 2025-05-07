@@ -18,9 +18,9 @@ public class Dog {
     private String specialnotes;
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date dateofarrival;
-    private Boolean availableforadoption;
     private String color;
     private Integer furtypeid;
     private Integer sizeid;
     private Integer breedid;
+    private Integer adopterid;
 }
