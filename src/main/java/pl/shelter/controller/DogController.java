@@ -1,6 +1,7 @@
 package pl.shelter.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -10,6 +11,7 @@ import pl.shelter.repository.SizeRepository;
 import pl.shelter.repository.BreedRepository;
 import pl.shelter.repository.FurTypeRepository;
 
+import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -105,6 +107,49 @@ public class DogController {
         dogRepository.addDog(dog); // or add logic to map related entities
         return "redirect:/"; // redirect to home page
     }
+    @GetMapping("/dogs")
+    public String showUnadoptedDogs(
+            @RequestParam(required = false) Integer breed,
+            @RequestParam(required = false) String name,
+            @RequestParam(required = false) Integer size,
+            @RequestParam(required = false) Integer furType,
+            @RequestParam(required = false) String gender,
+            @RequestParam(required = false) String color,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dateFrom,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dateTo,
+            Model model) {
+
+        List<Dog> dogs = dogRepository.getUnadoptedFiltered(breed, name, size, furType, gender, color, dateFrom, dateTo);
+        List<Map<String, Object>> dogViews = dogs.stream().map(dog -> {
+            Map<String, Object> view = new HashMap<>();
+            view.put("dog", dog);
+            view.put("furType", furTypeRepository.findById(dog.getFurtypeid()));
+            view.put("size", sizeRepository.findById(dog.getSizeid()));
+            view.put("breed", breedRepository.findById(dog.getBreedid()));
+            return view;
+        }).toList();
+
+        model.addAttribute("dogViews", dogViews);
+        model.addAttribute("breeds", breedRepository.getAll());
+        model.addAttribute("sizes", sizeRepository.getAll());
+        model.addAttribute("furTypes", furTypeRepository.getAll());
+        model.addAttribute("selectedBreed", breed);
+        model.addAttribute("selectedSize", size);
+        model.addAttribute("selectedFurType", furType);
+        model.addAttribute("searchName", name);
+        model.addAttribute("selectedGender", gender);
+        model.addAttribute("selectedColor", color);
+        model.addAttribute("selectedDateFrom", dateFrom);
+        model.addAttribute("selectedDateTo", dateTo);
+
+        return "dogs-list";
+    }
+    @PostMapping("/dogs/delete")
+    public String deleteDog(@RequestParam("id") int id) {
+        dogRepository.deleteById(id);
+        return "redirect:/dogs";
+    }
+
 
 
     @GetMapping("/dogs/{id}")

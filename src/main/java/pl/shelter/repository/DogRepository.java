@@ -6,6 +6,8 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import pl.shelter.model.Dog;
 
+import java.sql.Date;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -47,6 +49,48 @@ public class DogRepository {
 
         return jdbcTemplate.query(sql.toString(), params.toArray(), new DogRowMapper());
     }
+    public List<Dog> getUnadoptedFiltered(Integer breedId, String name, Integer sizeId,
+                                          Integer furTypeId, String gender, String color,
+                                          LocalDate dateFrom, LocalDate dateTo) {
+
+        StringBuilder sql = new StringBuilder("SELECT * FROM dog WHERE adopterid IS NULL");
+        List<Object> params = new ArrayList<>();
+
+        if (breedId != null) {
+            sql.append(" AND breedid = ?");
+            params.add(breedId);
+        }
+        if (name != null && !name.isBlank()) {
+            sql.append(" AND LOWER(name) LIKE ?");
+            params.add("%" + name.toLowerCase().trim() + "%");
+        }
+        if (sizeId != null) {
+            sql.append(" AND sizeid = ?");
+            params.add(sizeId);
+        }
+        if (furTypeId != null) {
+            sql.append(" AND furtypeid = ?");
+            params.add(furTypeId);
+        }
+        if (gender != null && !gender.isBlank()) {
+            sql.append(" AND LOWER(gender) = ?");
+            params.add(gender.toLowerCase());
+        }
+        if (color != null && !color.isBlank()) {
+            sql.append(" AND LOWER(color) LIKE ?");
+            params.add("%" + color.toLowerCase().trim() + "%");
+        }
+        if (dateFrom != null) {
+            sql.append(" AND dateofarrival >= ?");
+            params.add(Date.valueOf(dateFrom));
+        }
+        if (dateTo != null) {
+            sql.append(" AND dateofarrival <= ?");
+            params.add(Date.valueOf(dateTo));
+        }
+
+        return jdbcTemplate.query(sql.toString(), params.toArray(), new DogRowMapper());
+    }
 
 
 
@@ -80,5 +124,9 @@ public class DogRepository {
                 dog.getId()
         );
     }
+    public void deleteById(int id) {
+        jdbcTemplate.update("DELETE FROM dog WHERE id = ?", id);
+    }
+
 
 }

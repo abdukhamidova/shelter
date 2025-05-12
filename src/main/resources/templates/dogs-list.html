@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+<head>
+  <title>Lista niezaadoptowanych psów</title>
+  <script>
+    function confirmDelete(id, name) {
+      const dialog = document.getElementById('confirmDialog');
+      dialog.querySelector('#dogIdToDelete').value = id;
+      dialog.querySelector('#dogNameToDelete').textContent = name;
+      dialog.showModal();
+    }
+  </script>
+
+</head>
+
+<body>
+<main layout:fragment="content">
+
+  <h1>Niezaadoptowane psy</h1>
+
+  <div class="filter-bar">
+    <form method="get" th:action="@{/dogs}" style="display: flex; gap: 1rem;">
+      <input type="text" name="name" placeholder="Szukaj po imieniu" th:value="${searchName}">
+      <input type="hidden" name="breed" th:value="${selectedBreed}" />
+      <input type="hidden" name="size" th:value="${selectedSize}" />
+      <input type="hidden" name="furType" th:value="${selectedFurType}" />
+      <button type="submit">Szukaj</button>
+    </form>
+
+    <button type="button" onclick="document.getElementById('filterDialog').showModal()">🛠 Filtry</button>
+  </div>
+  <div class="chip-container"
+       th:if="${breedName != null or sizeName != null or furTypeName != null or selectedGender != null or selectedColor != null or selectedDateFrom != null or selectedDateTo != null}">
+
+    <form th:if="${breedName}" method="get" th:action="@{/dogs}">
+      <input type="hidden" name="name" th:value="${searchName}" />
+      <input type="hidden" name="size" th:value="${selectedSize}" />
+      <input type="hidden" name="furType" th:value="${selectedFurType}" />
+      <input type="hidden" name="gender" th:value="${selectedGender}" />
+      <input type="hidden" name="color" th:value="${selectedColor}" />
+      <input type="hidden" name="dateFrom" th:value="${selectedDateFrom}" />
+      <input type="hidden" name="dateTo" th:value="${selectedDateTo}" />
+      <div class="chip">
+        Rasa: <span th:text="${breedName}"></span>
+        <button type="submit">✕</button>
+      </div>
+    </form>
+
+    <form th:if="${sizeName}" method="get" th:action="@{/dogs}">
+      <input type="hidden" name="name" th:value="${searchName}" />
+      <input type="hidden" name="breed" th:value="${selectedBreed}" />
+      <input type="hidden" name="furType" th:value="${selectedFurType}" />
+      <input type="hidden" name="gender" th:value="${selectedGender}" />
+      <input type="hidden" name="color" th:value="${selectedColor}" />
+      <input type="hidden" name="dateFrom" th:value="${selectedDateFrom}" />
+      <input type="hidden" name="dateTo" th:value="${selectedDateTo}" />
+      <div class="chip">
+        Rozmiar: <span th:text="${sizeName}"></span>
+        <button type="submit">✕</button>
+      </div>
+    </form>
+
+    <form th:if="${furTypeName}" method="get" th:action="@{/dogs}">
+      <input type="hidden" name="name" th:value="${searchName}" />
+      <input type="hidden" name="breed" th:value="${selectedBreed}" />
+      <input type="hidden" name="size" th:value="${selectedSize}" />
+      <input type="hidden" name="gender" th:value="${selectedGender}" />
+      <input type="hidden" name="color" th:value="${selectedColor}" />
+      <input type="hidden" name="dateFrom" th:value="${selectedDateFrom}" />
+      <input type="hidden" name="dateTo" th:value="${selectedDateTo}" />
+      <div class="chip">
+        Sierść: <span th:text="${furTypeName}"></span>
+        <button type="submit">✕</button>
+      </div>
+    </form>
+
+    <form th:if="${selectedGender != null}" method="get" th:action="@{/dogs}">
+      <input type="hidden" name="name" th:value="${searchName}" />
+      <input type="hidden" name="breed" th:value="${selectedBreed}" />
+      <input type="hidden" name="size" th:value="${selectedSize}" />
+      <input type="hidden" name="furType" th:value="${selectedFurType}" />
+      <input type="hidden" name="color" th:value="${selectedColor}" />
+      <input type="hidden" name="dateFrom" th:value="${selectedDateFrom}" />
+      <input type="hidden" name="dateTo" th:value="${selectedDateTo}" />
+      <div class="chip">
+        Płeć: <span th:text="${selectedGender == 'Male' ? 'Samiec' : 'Samica'}"></span>
+        <button type="submit">✕</button>
+      </div>
+    </form>
+
+    <form th:if="${selectedColor != null and !selectedColor.isEmpty()}" method="get" th:action="@{/dogs}">
+      <input type="hidden" name="name" th:value="${searchName}" />
+      <input type="hidden" name="breed" th:value="${selectedBreed}" />
+      <input type="hidden" name="size" th:value="${selectedSize}" />
+      <input type="hidden" name="furType" th:value="${selectedFurType}" />
+      <input type="hidden" name="gender" th:value="${selectedGender}" />
+      <input type="hidden" name="dateFrom" th:value="${selectedDateFrom}" />
+      <input type="hidden" name="dateTo" th:value="${selectedDateTo}" />
+      <div class="chip">
+        Kolor: <span th:text="${selectedColor}"></span>
+        <button type="submit">✕</button>
+      </div>
+    </form>
+
+    <form th:if="${selectedDateFrom != null}" method="get" th:action="@{/dogs}">
+      <input type="hidden" name="name" th:value="${searchName}" />
+      <input type="hidden" name="breed" th:value="${selectedBreed}" />
+      <input type="hidden" name="size" th:value="${selectedSize}" />
+      <input type="hidden" name="furType" th:value="${selectedFurType}" />
+      <input type="hidden" name="gender" th:value="${selectedGender}" />
+      <input type="hidden" name="color" th:value="${selectedColor}" />
+      <input type="hidden" name="dateTo" th:value="${selectedDateTo}" />
+      <div class="chip">
+        Od: <span th:text="${selectedDateFrom}"></span>
+        <button type="submit">✕</button>
+      </div>
+    </form>
+
+    <form th:if="${selectedDateTo != null}" method="get" th:action="@{/dogs}">
+      <input type="hidden" name="name" th:value="${searchName}" />
+      <input type="hidden" name="breed" th:value="${selectedBreed}" />
+      <input type="hidden" name="size" th:value="${selectedSize}" />
+      <input type="hidden" name="furType" th:value="${selectedFurType}" />
+      <input type="hidden" name="gender" th:value="${selectedGender}" />
+      <input type="hidden" name="color" th:value="${selectedColor}" />
+      <input type="hidden" name="dateFrom" th:value="${selectedDateFrom}" />
+      <div class="chip">
+        Do: <span th:text="${selectedDateTo}"></span>
+        <button type="submit">✕</button>
+      </div>
+    </form>
+
+
+    <form th:if="${breedName != null or sizeName != null or furTypeName != null or selectedGender != null or (selectedColor != null and !selectedColor.isEmpty()) or selectedDateFrom != null or selectedDateTo != null}"
+          method="get" th:action="@{/dogs}">
+      <button type="submit" class="reset-button">Resetuj wszystkie</button>
+    </form>
+
+  </div>
+
+  <dialog id="filterDialog">
+    <form method="get" th:action="@{/dogs}">
+      <label>Imię:
+        <input type="text" name="name" th:value="${searchName}" />
+      </label>
+      <br><br>
+
+      <label>Rasa:
+        <select name="breed">
+          <option value="">Wszystkie</option>
+          <option th:each="b : ${breeds}" th:value="${b.id}" th:text="${b.name}"
+                  th:selected="${selectedBreed != null and selectedBreed == b.id}"></option>
+        </select>
+      </label>
+      <br><br>
+
+      <label>Rozmiar:
+        <select name="size">
+          <option value="">Wszystkie</option>
+          <option th:each="s : ${sizes}" th:value="${s.id}" th:text="${s.name}"
+                  th:selected="${selectedSize != null and selectedSize == s.id}"></option>
+        </select>
+      </label>
+      <br><br>
+
+      <label>Typ sierści:
+        <select name="furType">
+          <option value="">Wszystkie</option>
+          <option th:each="f : ${furTypes}" th:value="${f.id}" th:text="${f.name}"
+                  th:selected="${selectedFurType != null and selectedFurType == f.id}"></option>
+        </select>
+      </label>
+      <br><br>
+
+      <label>Płeć:
+        <select name="gender">
+          <option value="">Obie</option>
+          <option value="Male" th:selected="${selectedGender == 'Male'}">Samiec</option>
+          <option value="Female" th:selected="${selectedGender == 'Female'}">Samica</option>
+        </select>
+      </label>
+      <br><br>
+
+      <label>Kolor:
+        <input type="text" name="color" th:value="${selectedColor}" />
+      </label>
+      <br><br>
+
+      <label>Data przyjęcia (od):
+        <input type="date" name="dateFrom" th:value="${selectedDateFrom}" />
+      </label>
+      <br><br>
+
+      <label>Data przyjęcia (do):
+        <input type="date" name="dateTo" th:value="${selectedDateTo}" />
+      </label>
+      <br><br>
+
+      <div class="dialog-actions">
+        <button type="submit">Filtruj</button>
+        <button type="button" onclick="document.getElementById('filterDialog').close()">Anuluj</button>
+      </div>
+    </form>
+
+  </dialog>
+
+  <dialog id="confirmDialog">
+    <form method="post" th:action="@{/dogs/delete}" th:object="${dog}">
+      <input type="hidden" name="id" id="dogIdToDelete" />
+      <p>Czy na pewno chcesz usunąć  <strong id="dogNameToDelete"></strong>?</p>
+      <div class="dialog-actions">
+        <button type="submit">Usuń</button>
+        <button type="button" onclick="document.getElementById('confirmDialog').close()">Anuluj</button>
+      </div>
+    </form>
+  </dialog>
+  <p th:if="${#lists.isEmpty(dogViews)}"
+     style="text-align: center; color: #888; margin-top: 2rem;">
+    Brak wyników pasujących do wybranych filtrów.
+  </p>
+
+  <table th:if="${not #lists.isEmpty(dogViews)}">
+    <thead>
+    <tr>
+      <th>ID</th>
+      <th>Imię</th>
+      <th>Płeć</th>
+      <th>Waga</th>
+      <th>Uwagi</th>
+      <th>Data przyjęcia</th>
+      <th>Kolor</th>
+      <th>Typ sierści</th>
+      <th>Rozmiar</th>
+      <th>Rasa</th>
+      <th>Usuń</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="view : ${dogViews}" th:onclick="|window.location.href='/dogs/' + ${view.dog.id}|" style="cursor: pointer;">
+      <td th:text="${view.dog.id}"></td>
+      <td th:text="${view.dog.name}"></td>
+      <td th:text="${view.dog.gender}"></td>
+      <td th:text="${view.dog.weight} + ' kg'"></td>
+      <td th:text="${view.dog.specialnotes}"></td>
+      <td th:text="${view.dog.dateofarrival}"></td>
+      <td th:text="${view.dog.color}"></td>
+      <td th:text="${view.furType.name}"></td>
+      <td th:text="${view.size.name}"></td>
+      <td th:text="${view.breed.name}"></td>
+      <td>
+        <button type="button"
+                th:attr="data-id=${view.dog.id}, data-name=${view.dog.name}"
+                onclick="event.stopPropagation(); confirmDelete(this.dataset.id, this.dataset.name)">🗑</button>
+
+      </td>
+    </tr>
+    </tbody>
+  </table>
+
+</main>
+</body>
+</html>

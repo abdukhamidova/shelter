@@ -1,260 +1,130 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+
 <head>
-    <meta charset="UTF-8">
-    <title>Schronisko</title>
-    <style>
-        body {
-            font-family: 'Segoe UI', sans-serif;
-            background-color: #f7f9fb;
-            margin: 0;
-            padding: 2rem;
-        }
+    <title>Lista psów</title>
 
-        h1 {
-            text-align: center;
-            color: #333;
-        }
-
-        .filter-bar {
-            display: flex;
-            justify-content: center;
-            gap: 1rem;
-            margin-bottom: 1.5rem;
-        }
-
-        input[type="text"], select {
-            padding: 0.5rem;
-            font-size: 1rem;
-            border: 1px solid #ccc;
-            border-radius: 6px;
-        }
-
-        button {
-            padding: 0.5rem 1rem;
-            font-size: 1rem;
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-        }
-
-        button:hover {
-            background-color: #45a049;
-        }
-
-        .chip {
-            display: inline-block;
-            background-color: #e1f5fe;
-            padding: 0.5rem 1rem;
-            border-radius: 20px;
-            margin: 0.25rem;
-            font-size: 0.9rem;
-        }
-
-        .chip button {
-            background: none;
-            border: none;
-            margin-left: 0.5rem;
-            cursor: pointer;
-            font-weight: bold;
-            color: #444;
-        }
-
-        .chip button:hover {
-            color: red;
-        }
-
-        .chip-container {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 0.5rem;
-            margin-bottom: 1.5rem;
-        }
-
-        table {
-            width: 80%;
-            margin: 0 auto;
-            border-collapse: collapse;
-            background-color: white;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-        }
-
-        thead {
-            background-color: #e9ecef;
-        }
-
-        th, td {
-            padding: 0.75rem;
-            text-align: left;
-            border-bottom: 1px solid #ddd;
-        }
-
-        tr:hover {
-            background-color: #f1f1f1;
-            cursor: pointer;
-        }
-
-        .back-link {
-            display: block;
-            text-align: center;
-            margin-top: 2rem;
-            color: #007BFF;
-            text-decoration: none;
-        }
-
-        .back-link:hover {
-            text-decoration: underline;
-        }
-
-        dialog {
-            border: none;
-            border-radius: 10px;
-            padding: 2rem;
-            max-width: 400px;
-        }
-
-        dialog::backdrop {
-            background: rgba(0, 0, 0, 0.4);
-        }
-
-        .dialog-actions {
-            display: flex;
-            justify-content: flex-end;
-            gap: 1rem;
-            margin-top: 1rem;
-        }
-
-        .reset-button {
-            background-color: #ddd;
-            color: #333;
-        }
-
-        .reset-button:hover {
-            background-color: #bbb;
-        }
-    </style>
 </head>
+
 <body>
+<main layout:fragment="content">
 
-<h1>Lista psów dostępnych do adopcji</h1>
+    <h1>Lista psów dostępnych do adopcji</h1>
 
-<div class="filter-bar">
-    <form method="get" th:action="@{/}" style="display: flex; gap: 1rem;">
-        <input type="text" name="name" placeholder="Szukaj po imieniu" th:value="${searchName}">
-        <input type="hidden" name="breed" th:value="${selectedBreed}" />
-        <input type="hidden" name="size" th:value="${selectedSize}" />
-        <input type="hidden" name="furType" th:value="${selectedFurType}" />
-        <button type="submit">Szukaj</button>
-    </form>
+    <div class="filter-bar">
+        <form method="get" th:action="@{/}" style="display: flex; gap: 1rem;">
+            <input type="text" name="name" placeholder="Szukaj po imieniu" th:value="${searchName}">
+            <input type="hidden" name="breed" th:value="${selectedBreed}" />
+            <input type="hidden" name="size" th:value="${selectedSize}" />
+            <input type="hidden" name="furType" th:value="${selectedFurType}" />
+            <button type="submit">Szukaj</button>
+        </form>
 
-    <button type="button" onclick="document.getElementById('filterDialog').showModal()">🛠 Filtry</button>
-</div>
+        <button type="button" onclick="document.getElementById('filterDialog').showModal()">🛠 Filtry</button>
+    </div>
 
-<div class="chip-container" th:if="${breedName != null or sizeName != null or furTypeName != null}">
-    <form th:if="${breedName}" method="get" th:action="@{/}">
-        <input type="hidden" name="name" th:value="${searchName}"/>
-        <input type="hidden" name="size" th:value="${selectedSize}"/>
-        <input type="hidden" name="furType" th:value="${selectedFurType}"/>
-        <div class="chip">
-            Rasa: <span th:text="${breedName}"/>
-            <button type="submit">✕</button>
-        </div>
-    </form>
+    <div class="chip-container" th:if="${breedName != null or sizeName != null or furTypeName != null}">
+        <form th:if="${breedName}" method="get" th:action="@{/}" style=" align-items: center;">
+            <input type="hidden" name="name" th:value="${searchName}"/>
+            <input type="hidden" name="size" th:value="${selectedSize}"/>
+            <input type="hidden" name="furType" th:value="${selectedFurType}"/>
+            <div class="chip">
+                Rasa: <span th:text="${breedName}"/>
+                <button type="submit">✕</button>
+            </div>
+        </form>
 
-    <form th:if="${sizeName}" method="get" th:action="@{/}">
-        <input type="hidden" name="name" th:value="${searchName}"/>
-        <input type="hidden" name="breed" th:value="${selectedBreed}"/>
-        <input type="hidden" name="furType" th:value="${selectedFurType}"/>
-        <div class="chip">
-            Rozmiar: <span th:text="${sizeName}"/>
-            <button type="submit">✕</button>
-        </div>
-    </form>
+        <form th:if="${sizeName}" method="get" th:action="@{/}">
+            <input type="hidden" name="name" th:value="${searchName}"/>
+            <input type="hidden" name="breed" th:value="${selectedBreed}"/>
+            <input type="hidden" name="furType" th:value="${selectedFurType}"/>
+            <div class="chip">
+                Rozmiar: <span th:text="${sizeName}"/>
+                <button type="submit">✕</button>
+            </div>
+        </form>
 
-    <form th:if="${furTypeName}" method="get" th:action="@{/}">
-        <input type="hidden" name="name" th:value="${searchName}"/>
-        <input type="hidden" name="breed" th:value="${selectedBreed}"/>
-        <input type="hidden" name="size" th:value="${selectedSize}"/>
-        <div class="chip">
-            Sierść: <span th:text="${furTypeName}"/>
-            <button type="submit">✕</button>
-        </div>
-    </form>
+        <form th:if="${furTypeName}" method="get" th:action="@{/}">
+            <input type="hidden" name="name" th:value="${searchName}"/>
+            <input type="hidden" name="breed" th:value="${selectedBreed}"/>
+            <input type="hidden" name="size" th:value="${selectedSize}"/>
+            <div class="chip">
+                Sierść: <span th:text="${furTypeName}"/>
+                <button type="submit">✕</button>
+            </div>
+        </form>
 
-    <form method="get" th:action="@{/}">
-        <button type="submit" class="reset-button">🗑 Resetuj wszystkie</button>
-    </form>
-</div>
+        <form method="get" th:action="@{/}">
+            <button type="submit" class="reset-button">Resetuj wszystkie</button>
+        </form>
+    </div>
 
-<dialog id="filterDialog">
-    <form method="get" th:action="@{/}">
-        <input type="hidden" name="name" th:value="${searchName}" />
-        <label>
-            Rasa:
-            <select name="breed">
-                <option value="">Wszystkie</option>
-                <option th:each="b : ${breeds}"
-                        th:value="${b.id}"
-                        th:text="${b.name}"
-                        th:selected="${selectedBreed != null and selectedBreed == b.id}"></option>
-            </select>
-        </label>
-        <br><br>
-        <label>
-            Rozmiar:
-            <select name="size">
-                <option value="">Wszystkie</option>
-                <option th:each="s : ${sizes}"
-                        th:value="${s.id}"
-                        th:text="${s.name}"
-                        th:selected="${selectedSize != null and selectedSize == s.id}"></option>
-            </select>
-        </label>
-        <br><br>
-        <label>
-            Typ sierści:
-            <select name="furType">
-                <option value="">Wszystkie</option>
-                <option th:each="f : ${furTypes}"
-                        th:value="${f.id}"
-                        th:text="${f.name}"
-                        th:selected="${selectedFurType != null and selectedFurType == f.id}"></option>
-            </select>
-        </label>
+    <dialog id="filterDialog">
+        <form method="get" th:action="@{/}">
+            <input type="hidden" name="name" th:value="${searchName}" />
+            <label>
+                Rasa:
+                <select name="breed">
+                    <option value="">Wszystkie</option>
+                    <option th:each="b : ${breeds}"
+                            th:value="${b.id}"
+                            th:text="${b.name}"
+                            th:selected="${selectedBreed != null and selectedBreed == b.id}"></option>
+                </select>
+            </label>
+            <br><br>
+            <label>
+                Rozmiar:
+                <select name="size">
+                    <option value="">Wszystkie</option>
+                    <option th:each="s : ${sizes}"
+                            th:value="${s.id}"
+                            th:text="${s.name}"
+                            th:selected="${selectedSize != null and selectedSize == s.id}"></option>
+                </select>
+            </label>
+            <br><br>
+            <label>
+                Typ sierści:
+                <select name="furType">
+                    <option value="">Wszystkie</option>
+                    <option th:each="f : ${furTypes}"
+                            th:value="${f.id}"
+                            th:text="${f.name}"
+                            th:selected="${selectedFurType != null and selectedFurType == f.id}"></option>
+                </select>
+            </label>
 
-        <div class="dialog-actions">
-            <button type="submit">Filtruj</button>
-            <button type="button" onclick="document.getElementById('filterDialog').close()">Anuluj</button>
-        </div>
-    </form>
-</dialog>
-<p th:if="${#lists.isEmpty(dogViews)}" style="text-align: center; color: #888; margin-top: 2rem;">
-    Brak wyników pasujących do wybranych filtrów.
-</p>
+            <div class="dialog-actions">
+                <button type="submit">Filtruj</button>
+                <button type="button" onclick="document.getElementById('filterDialog').close()">Anuluj</button>
+            </div>
+        </form>
+    </dialog>
 
-<table th:if="${not #lists.isEmpty(dogViews)}">
-    <thead>
-    <tr>
-        <th>ID</th>
-        <th>Imię</th>
-        <th>Rasa</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr th:each="view : ${dogViews}"
-        th:onclick="|window.location.href='/dogs/${view.dog.id}'|">
-        <td th:text="${view.dog.id}"></td>
-        <td th:text="${view.dog.name}"></td>
-        <td th:text="${view.breed.name}"></td>
-    </tr>
-    </tbody>
-</table>
+    <p th:if="${#lists.isEmpty(dogViews)}" style="text-align: center; color: #888; margin-top: 2rem;">
+        Brak wyników pasujących do wybranych filtrów.
+    </p>
 
+    <table th:if="${not #lists.isEmpty(dogViews)}">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Imię</th>
+            <th>Rasa</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="view : ${dogViews}" th:onclick="|window.location.href='/dogs/${view.dog.id}'|">
+            <td th:text="${view.dog.id}"></td>
+            <td th:text="${view.dog.name}"></td>
+            <td th:text="${view.breed.name}"></td>
+        </tr>
+        </tbody>
+    </table>
 
-<a class="back-link" th:href="@{/}">← Powrót do strony głównej</a>
-
+</main>
 </body>
 </html>
