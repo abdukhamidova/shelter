@@ -36,7 +36,7 @@ public class DogController {
         return "add-dog";
     }
 
-    @GetMapping("/")
+    /*@GetMapping("/")
     public String index(Model model) {
         List<Dog> dogs = dogRepository.getAll();
 
@@ -52,7 +52,53 @@ public class DogController {
 
         model.addAttribute("dogViews", dogViews);
         return "index";
+    }*/
+    @GetMapping("/")
+    public String showUnadoptedDogs(@RequestParam(required = false) Integer breed,
+                                    @RequestParam(required = false) String name,
+                                    @RequestParam(required = false) Integer size,
+                                    @RequestParam(required = false) Integer furType,
+                                    Model model) {
+
+        List<Dog> dogs = dogRepository.getUnadoptedFiltered(breed, name, size, furType);
+        List<Map<String, Object>> dogViews = dogs.stream().map(dog -> {
+            Map<String, Object> view = new HashMap<>();
+            view.put("dog", dog);
+            view.put("breed", breedRepository.findById(dog.getBreedid()));
+            return view;
+        }).toList();
+
+        model.addAttribute("dogViews", dogViews);
+        model.addAttribute("breeds", breedRepository.getAll());
+        model.addAttribute("sizes", sizeRepository.getAll());
+        model.addAttribute("furTypes", furTypeRepository.getAll());
+
+        model.addAttribute("selectedBreed", breed);
+        model.addAttribute("selectedSize", size);
+        model.addAttribute("selectedFurType", furType);
+        model.addAttribute("searchName", name);
+
+        model.addAttribute("breedName", breedRepository.getAll().stream()
+                .filter(b -> breed != null && breed.equals(b.getId()))
+                .map(b -> b.getName())
+                .findFirst()
+                .orElse(null));
+
+        model.addAttribute("sizeName", sizeRepository.getAll().stream()
+                .filter(s -> size != null && size.equals(s.getId()))
+                .map(s -> s.getName())
+                .findFirst()
+                .orElse(null));
+
+        model.addAttribute("furTypeName", furTypeRepository.getAll().stream()
+                .filter(f -> furType != null && furType.equals(f.getId()))
+                .map(f -> f.getName())
+                .findFirst()
+                .orElse(null));
+
+        return "index";
     }
+
 
     @PostMapping("/add")
     public String addDog(@ModelAttribute Dog dog) {

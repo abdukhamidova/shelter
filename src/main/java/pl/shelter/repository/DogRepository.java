@@ -6,6 +6,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import pl.shelter.model.Dog;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Repository
@@ -19,6 +20,35 @@ public class DogRepository {
                     "FROM dog",
                 BeanPropertyRowMapper.newInstance(Dog.class));
     }
+
+    public List<Dog> getUnadoptedFiltered(Integer breedId, String name, Integer sizeId, Integer furTypeId) {
+        StringBuilder sql = new StringBuilder("SELECT * FROM dog WHERE adopterid IS NULL");
+        List<Object> params = new ArrayList<>();
+
+        if (breedId != null) {
+            sql.append(" AND breedid = ?");
+            params.add(breedId);
+        }
+
+        if (name != null && !name.trim().isEmpty()) {
+            sql.append(" AND LOWER(name) LIKE ?");
+            params.add("%" + name.trim().toLowerCase() + "%");
+        }
+
+        if (sizeId != null) {
+            sql.append(" AND sizeid = ?");
+            params.add(sizeId);
+        }
+
+        if (furTypeId != null) {
+            sql.append(" AND furtypeid = ?");
+            params.add(furTypeId);
+        }
+
+        return jdbcTemplate.query(sql.toString(), params.toArray(), new DogRowMapper());
+    }
+
+
 
     public int addDog(Dog dog) {
         jdbcTemplate.update(
