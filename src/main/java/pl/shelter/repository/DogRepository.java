@@ -1,6 +1,7 @@
 package pl.shelter.repository;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -10,6 +11,7 @@ import java.sql.Date;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class DogRepository {
@@ -103,9 +105,17 @@ public class DogRepository {
 
         return 1;
     }
-    public Dog findById(int id) {
+    public Optional<Dog> findById(int id) {
         String sql = "SELECT * FROM dog WHERE id = ?";
-        return jdbcTemplate.queryForObject(sql, new DogRowMapper(), id);
+        try {
+            Dog dog = jdbcTemplate.queryForObject(sql, new DogRowMapper(), id);
+            return Optional.ofNullable(dog);
+        } catch (EmptyResultDataAccessException e) {
+            return Optional.empty();
+        }
+    }
+    public void updateDogAdopter(Dog dog) {
+        jdbcTemplate.update("UPDATE dog SET adopterid = ? WHERE id = ?", dog.getAdopterid(), dog.getId());
     }
 
     public void updateDog(Dog dog) {
@@ -128,5 +138,51 @@ public class DogRepository {
         jdbcTemplate.update("DELETE FROM dog WHERE id = ?", id);
     }
 
+    public List<Dog> getAdoptedWithSearch(String search, Integer breedId) {
+        StringBuilder sql = new StringBuilder("SELECT * FROM DOG WHERE adopterid IS NOT NULL");
+        List<Object> params = new ArrayList<>();
+
+        if (search != null && !search.isBlank()) {
+            sql.append(" AND (LOWER(name) LIKE ? OR adopterid IN (SELECT id FROM ADOPTER WHERE LOWER(firstname) LIKE ? OR LOWER(lastname) LIKE ?))");
+            String pattern = "%" + search.toLowerCase() + "%";
+            params.add(pattern);
+            params.add(pattern);
+            params.add(pattern);
+        }
+
+        if (breedId != null) {
+            sql.append(" AND breedid = ?");
+            params.add(breedId);
+        }
+
+        return jdbcTemplate.query(sql.toString(), new DogRowMapper(), params.toArray());
+    }
+
+    public void clearAdopter(int dogId) {
+        String sql = "UPDATE DOG SET adopterid = NULL WHERE id = ?";
+        jdbcTemplate.update(sql, dogId);
+    }
+
+    public List<Dog> getAdoptedWithFilters(String search, Integer breed, String gender) {
+        StringBuilder sql = new StringBuilder("SELECT * FROM DOG WHERE adopterid IS NOT NULL");
+        List<Object> params = new ArrayList<>();
+
+        if (search != null && !search.isBlank()) {
+            sql.append(" AND (LOWER(name) LIKE ? OR adopterid IN (SELECT id FROM ADOPTER WHERE LOWER(firstname || ' ' || lastname) LIKE ?))");
+            String searchTerm = "%" + search.toLowerCase() + "%";
+            params.add(searchTerm);
+            params.add(searchTerm);
+        }
+        if (breed != null) {
+            sql.append(" AND breedid = ?");
+            params.add(breed);
+        }
+        if (gender != null && !gender.isBlank()) {
+            sql.append(" AND UPPER(gender) = ?");
+            params.add(gender.toUpperCase());
+        }
+
+        return jdbcTemplate.query(sql.toString(), new DogRowMapper(), params.toArray());
+    }
 
 }

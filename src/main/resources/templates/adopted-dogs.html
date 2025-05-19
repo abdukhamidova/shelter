@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Adoptowane psy</title>
+  <script>
+    function confirmRevert(id, name) {
+      const dialog = document.getElementById('revertDialog');
+      if (!dialog) return;
+      dialog.querySelector('#dogIdToRevert').value = id;
+      dialog.querySelector('#dogNameToRevert').textContent = name;
+      dialog.showModal();
+    }
+  </script>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #f7f9fb;
+      margin: 0;
+      padding: 2rem;
+    }
+
+    h1 {
+      text-align: center;
+      color: #333;
+    }
+
+    .filter-bar {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    input[type="text"], select {
+      padding: 0.5rem;
+      font-size: 1rem;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+    }
+
+    button {
+      padding: 0.5rem 1rem;
+      font-size: 1rem;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #45a049;
+    }
+
+    .reset-button {
+      background-color: #ddd;
+      color: #333;
+      border: none;
+      padding: 0.5rem 1rem;
+      font-size: 1rem;
+      border-radius: 6px;
+      cursor: pointer;
+      height: 2.5rem;
+      display: flex;
+      align-items: center;
+    }
+
+    .reset-button:hover {
+      background-color: #bbb;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background-color: #fff;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    th, td {
+      padding: 12px;
+      border-bottom: 1px solid #ddd;
+      text-align: left;
+    }
+
+    th {
+      background-color: #f8f8f8;
+    }
+
+    tr:hover {
+      background-color: #f1f1f1;
+    }
+
+    .chip-container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 0.5rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .chip {
+      background-color: #84dd87;
+      border-radius: 6px;
+      padding: 0.4rem 0.8rem;
+      display: flex;
+      align-items: center;
+      font-size: 1rem;
+    }
+
+    .chip button {
+      background: none;
+      border: none;
+      margin-left: 0.5rem;
+      font-weight: bold;
+      font-size: 1rem;
+      cursor: pointer;
+      color: #444;
+    }
+
+    dialog {
+      border: none;
+      border-radius: 10px;
+      padding: 2rem;
+      max-width: 400px;
+      background: white;
+      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+    }
+
+    dialog::backdrop {
+      background: rgba(0, 0, 0, 0.4);
+    }
+
+    .dialog-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+  </style>
+</head>
+
+<body>
+
+<main layout:fragment="content">
+
+  <h1><img src="/css/images/adopted-dog-icon.png" alt="Adoptowane psy" style="height: 32px;"> Adoptowane psy</h1>
+
+  <div class="filter-bar">
+    <form class="filter-form" method="get" th:action="@{/adopted}" style="display: flex; gap: 1rem;">
+      <input type="text" name="search" placeholder="Szukaj psa lub właściciela" th:value="${search}" />
+      <button type="submit">Szukaj</button>
+    </form>
+    <button type="button" onclick="document.getElementById('dogFilterDialog').showModal()">🛠 Filtry</button>
+  </div>
+
+  <div class="chip-container" th:if="${not #maps.isEmpty(activeFilters)}">
+
+
+    <form th:each="entry : ${activeFilters.entrySet()}" th:if="${entry.key != 'search'}" method="get" th:action="@{/adopted}">
+      <input type="hidden" name="search" th:value="${search}" />
+      <input type="hidden"
+             th:each="e : ${activeFilters.entrySet()}"
+             th:if="${e.key != entry.key and e.key != 'search'}"
+             th:name="${e.key}"
+             th:value="${e.key == 'breed' ? selectedBreed : e.key == 'gender' ? selectedGender : ''}" />
+      <div class="chip">
+        <span th:text="|${filterLabels[entry.key]}: ${entry.value}|"></span>
+        <button type="submit">&times;</button>
+      </div>
+    </form>
+    <form method="get" th:action="@{/adopted}">
+    <button type="submit" class="reset-button">Resetuj</button>
+  </form>
+  </div>
+
+  <p th:if="${#lists.isEmpty(dogViews)}" style="text-align: center; color: #888; margin-top: 2rem;">
+    Brak adoptowanych psów pasujących do wyszukiwania.
+  </p>
+
+  <table th:if="${not #lists.isEmpty(dogViews)}">
+    <thead>
+    <tr>
+      <th>ID</th>
+      <th>Imię psa</th>
+      <th>Płeć</th>
+      <th>Rasa</th>
+      <th>Adopter</th>
+      <th>Email</th>
+      <th>Telefon</th>
+      <th>Miasto</th>
+      <th style="text-align: center;">Cofnij adopcję</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="view : ${dogViews}">
+      <td th:text="${view.dog.id}"></td>
+      <td th:text="${view.dog.name}"></td>
+      <td th:text="${view.dog.gender}"></td>
+      <td th:text="${view.breed.name}"></td>
+      <td th:text="${view.adopter.firstname + ' ' + view.adopter.lastname}"></td>
+      <td th:text="${view.adopter.email}"></td>
+      <td th:text="${view.adopter.phone}"></td>
+      <td th:text="${view.adopter.city}"></td>
+      <td style="text-align: center; vertical-align: middle;">
+        <button type="button"
+                th:attr="data-id=${view.dog.id}, data-name=${view.dog.name}"
+                onclick="event.stopPropagation(); confirmRevert(this.dataset.id, this.dataset.name)"
+                title="Cofnij adopcję">
+          <img src="/css/images/back-icon.png" alt="Cofnij adopcję" style="height: 20px;">
+        </button>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+
+  <dialog id="dogFilterDialog">
+    <form method="get" th:action="@{/adopted}">
+      <input type="hidden" name="search" th:value="${search}" />
+      <label>Płeć:
+        <select name="gender">
+          <option value="">Obie</option>
+          <option value="MALE" th:selected="${selectedGender == 'MALE'}">Samiec</option>
+          <option value="FEMALE" th:selected="${selectedGender == 'FEMALE'}">Samica</option>
+        </select>
+      </label><br><br>
+
+      <label>Rasa:
+        <select name="breed">
+          <option value="">Wszystkie</option>
+          <option th:each="b : ${breeds}" th:value="${b.id}" th:text="${b.name}"
+                  th:selected="${selectedBreed != null and selectedBreed == b.id}"></option>
+        </select>
+      </label><br><br>
+
+      <div class="dialog-actions">
+        <button type="submit">Filtruj</button>
+        <button type="button" onclick="document.getElementById('dogFilterDialog').close()">Anuluj</button>
+      </div>
+    </form>
+  </dialog>
+
+  <dialog id="revertDialog">
+    <form method="post" th:action="@{/adopted/revert}">
+      <input type="hidden" name="id" id="dogIdToRevert" />
+      <p>Czy na pewno chcesz cofnąć adopcję psa <strong id="dogNameToRevert"></strong>?</p>
+      <div class="dialog-actions">
+        <button type="submit">Cofnij</button>
+        <button type="button" onclick="document.getElementById('revertDialog').close()">Anuluj</button>
+      </div>
+    </form>
+  </dialog>
+
+</main>
+</body>
+</html>

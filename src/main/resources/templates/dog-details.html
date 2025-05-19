@@ -1,5 +1,7 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
 <head>
   <meta charset="UTF-8">
   <title>Dog Details</title>
@@ -138,9 +140,9 @@
   </script>
 </head>
 <body>
-
+<main layout:fragment="content">
 <div class="header">
-  <h1 th:text="${dog.name}"></h1>
+  <h1 th:text="'🐶 ' + ${dog.name}"></h1>
   <span class="gear" onclick="toggleEditMode()">&#9881;</span>
 </div>
 
@@ -200,6 +202,6 @@
 
   <button type="submit" id="editBtn" class="hidden">Zapisz</button>
 </form>
-
+</main>
 </body>
 </html>
