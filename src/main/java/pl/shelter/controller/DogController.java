@@ -3,6 +3,7 @@ package pl.shelter.controller;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -221,14 +222,33 @@ public class DogController {
     }
 
     @GetMapping("/adopt/{id}")
-    public String showAdoptionForm(@PathVariable Integer id, Model model) {
-        model.addAttribute("dog", dogRepository.findById(id).orElseThrow());
-        model.addAttribute("adopter", new Adopter());
+    public String showAdoptionForm(@PathVariable Integer id,
+                                   @RequestParam(required = false) String peselCheck,
+                                   Model model) {
+        Dog dog = dogRepository.findById(id).orElseThrow();
+        model.addAttribute("dog", dog);
         model.addAttribute("breeds", breedRepository.getAll());
         model.addAttribute("furTypes", furTypeRepository.getAll());
         model.addAttribute("sizes", sizeRepository.getAll());
+        model.addAttribute("peselCheck", peselCheck); // zachowaj wpisany PESEL
+
+        if (peselCheck != null && !peselCheck.isBlank()) {
+            Optional<Adopter> existing = adopterRepository.findByPesel(peselCheck);
+            if (existing.isPresent()) {
+                model.addAttribute("adopter", existing.get());
+            } else {
+                Adopter newAdopter = new Adopter();
+                newAdopter.setPesel(peselCheck);
+                model.addAttribute("adopter", newAdopter);
+            }
+            model.addAttribute("showForm", true);
+        } else {
+            model.addAttribute("showForm", false);
+        }
+
         return "adoption-form";
     }
+
 
 
 
@@ -238,20 +258,33 @@ public class DogController {
                                   @Valid @ModelAttribute("adopter") Adopter adopter,
                                   BindingResult result,
                                   Model model) {
+
         if (result.hasErrors()) {
             model.addAttribute("dog", dogRepository.findById(id).orElseThrow());
             model.addAttribute("breeds", breedRepository.getAll());
             model.addAttribute("furTypes", furTypeRepository.getAll());
             model.addAttribute("sizes", sizeRepository.getAll());
+            model.addAttribute("showForm", true);
             return "adoption-form";
         }
 
-        int adopterId = adopterRepository.save(adopter);
+        Optional<Adopter> existingAdopter = adopterRepository.findByPesel(adopter.getPesel());
+
+        int adopterId;
+        if (existingAdopter.isPresent()) {
+            adopterId = existingAdopter.get().getId();
+        } else {
+            adopterId = adopterRepository.save(adopter);
+        }
+
         Dog dog = dogRepository.findById(id).orElseThrow();
         dog.setAdopterid(adopterId);
         dogRepository.updateDogAdopter(dog);
+
         return "redirect:/dogs";
     }
+
+
     @GetMapping("/adopted")
     public String showAdoptedDogs(@RequestParam(required = false) String search,
                                   @RequestParam(required = false) Integer breed,

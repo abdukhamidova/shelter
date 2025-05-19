@@ -52,5 +52,14 @@ public class AdopterRepository {
         }
     }
 
+    public Optional<Adopter> findByPesel(String pesel) {
+        String sql = "SELECT * FROM adopter WHERE pesel = ?";
+        try {
+            Adopter adopter = jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<>(Adopter.class), pesel);
+            return Optional.ofNullable(adopter);
+        } catch (EmptyResultDataAccessException e) {
+            return Optional.empty();
+        }
+    }
 
 }
