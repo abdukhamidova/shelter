@@ -177,31 +177,31 @@
       </div>
     </div>
 
-    <label for="name" class="required-label">Name:</label>
+    <label for="name" class="required-label">Imię:</label>
     <input type="text" id="name" th:field="*{name}" />
 
-    <label class="required-label">Gender:
-      <input type="radio" th:field="*{gender}" value="MALE" /> Male
-      <input type="radio" th:field="*{gender}" value="FEMALE" /> Female
+    <label class="required-label">Płeć:
+      <input type="radio" th:field="*{gender}" value="MALE" /> samiec
+      <input type="radio" th:field="*{gender}" value="FEMALE" /> samica
     </label><br/>
 
-    <label for="weight" class="required-label">Weight:</label>
+    <label for="weight" class="required-label">Waga:</label>
     <input type="number" id="weight" step="0.1" th:field="*{weight}" />
 
-    <label for="specialnotes">Special Notes:</label>
+    <label for="specialnotes">Znaki charakterystyczne:</label>
     <input type="text" id="specialnotes" th:field="*{specialnotes}" />
 
-    <label for="dateofarrival" class="required-label">Date of Arrival:</label>
+    <label for="dateofarrival" class="required-label">Data przybycia:</label>
     <input type="date" id="dateofarrival" th:field="*{dateofarrival}" />
 
   </div>
 
   <div class="section">
     <h3>Characteristics</h3>
-    <label for="color" class="required-label">Color:</label>
+    <label for="color" class="required-label">Kolor:</label>
     <input type="text" id="color" th:field="*{color}" />
 
-    <label for="furtypeid" class="required-label">Fur Type:</label>
+    <label for="furtypeid" class="required-label">Typ sierści:</label>
     <select id="furtypeid" th:field="*{furtypeid}">
       <option th:each="fur : ${furTypes}"
               th:value="${fur.id}"
@@ -209,7 +209,7 @@
               th:selected="${fur.id == dog.furtypeid}"></option>
     </select>
 
-    <label for="sizeid" class="required-label">Size:</label>
+    <label for="sizeid" class="required-label">Rozmiar:</label>
     <select id="sizeid" th:field="*{sizeid}">
       <option th:each="size : ${sizes}"
               th:value="${size.id}"
@@ -217,7 +217,7 @@
               th:selected="${size.id == dog.sizeid}"></option>
     </select>
 
-    <label for="breedid" class="required-label">Breed:</label>
+    <label for="breedid" class="required-label">Rasa:</label>
     <select id="breedid" th:field="*{breedid}">
       <option th:each="breed : ${breeds}"
               th:value="${breed.id}"
@@ -235,7 +235,7 @@
 
 
   <h3></h3>
-  <button type="button" id="editBtn" class="hidden">Zapisz</button>
+  <button type="submit" id="editBtn" class="hidden">Zapisz</button>
 </form>
   <dialog id="confirmDialog">
     <form method="post" th:action="@{/dogs/delete}">

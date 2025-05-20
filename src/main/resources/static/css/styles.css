@@ -222,3 +222,19 @@ dialog#confirmDialog button[type="button"] {
     background-color: #6D4534;
     color: white;
 }
+
+.sortable-header {
+    color: black !important;
+    text-decoration: none !important;
+    font-weight: bold;
+    cursor: pointer;
+}
+.sortable-header:hover {
+    color: black !important;
+    text-decoration: none !important;
+}
+.wide-date {
+    width: 140px;
+    white-space: nowrap;
+}
+

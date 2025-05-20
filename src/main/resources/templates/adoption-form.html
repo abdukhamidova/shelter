@@ -130,7 +130,7 @@
     </div>
 
     <div class="section">
-      <h3>Cechy fizyczne</h3>
+      <h3>Szczegółowy opis</h3>
       <p><strong>Kolor:</strong> <span th:text="${dog.color}"></span></p>
       <p><strong>Sierść:</strong>
         <span th:each="fur : ${furTypes}" th:if="${fur.id == dog.furtypeid}" th:text="${fur.name}"></span>
@@ -177,7 +177,7 @@
       <label for="phone">Telefon:</label>
       <input type="text" id="phone" th:field="*{phone}"
              maxlength="11" required
-             pattern="\d{3} \d{3} \d{3}" title="Telefon w formacie 123 456 789"
+             pattern="\d{3} \d{3} \d{3}" title="Telefon w formacie xxx xxx xxx"
              placeholder="Podaj numer telefonu"
              oninput="formatPhoneNumber(this)" th:readonly="${adopter.id != null}" />
 

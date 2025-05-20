@@ -101,9 +101,12 @@ public class DogController {
             @RequestParam(required = false) String color,
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dateFrom,
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dateTo,
+            @RequestParam(required = false) String sortField,
+            @RequestParam(required = false, defaultValue = "asc") String sortDir,
+
             Model model) {
 
-        List<Dog> dogs = dogRepository.getUnadoptedFiltered(breed, name, size, furType, gender, color, dateFrom, dateTo);
+        List<Dog> dogs = dogRepository.getUnadoptedFiltered(breed, name, size, furType, gender, color, dateFrom, dateTo, sortField, sortDir);
         List<Map<String, Object>> dogViews = dogs.stream().map(dog -> {
             Map<String, Object> view = new HashMap<>();
             view.put("dog", dog);

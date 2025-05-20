@@ -60,8 +60,6 @@
             <input type="hidden" name="furType" th:value="${selectedFurType}" />
             <button type="submit">Szukaj</button>
         </form>
-
-        <button type="button" onclick="document.getElementById('filterDialog').showModal()">🛠 Filtry</button>
     </div>
 
     <div class="chip-container" th:if="${breedName != null or sizeName != null or furTypeName != null}">
@@ -150,14 +148,14 @@
     <table th:if="${not #lists.isEmpty(dogViews)}">
         <thead>
         <tr>
-            <th>ID</th>
+            <th>Lp</th>
             <th>Imię</th>
             <th>Rasa</th>
         </tr>
         </thead>
         <tbody>
-        <tr th:each="view : ${dogViews}" th:onclick="|window.location.href='/dogs/${view.dog.id}'|">
-            <td th:text="${view.dog.id}"></td>
+        <tr th:each="view, stat : ${dogViews}" th:onclick="|window.location.href='/dogs/${view.dog.id}'|">
+            <td th:text="${stat.index + 1}"></td> <!-- numeracja psów w tabeli od 1 -->
             <td th:text="${view.dog.name}"></td>
             <td th:text="${view.breed.name}"></td>
         </tr>

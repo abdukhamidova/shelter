@@ -13,7 +13,7 @@ import java.util.Date;
 public class Dog {
     private Integer id;
     private String name;
-    private String gender = "MALE";
+    private String gender = "Samiec";
     private Double weight;
     private String specialnotes;
     @DateTimeFormat(pattern = "yyyy-MM-dd")

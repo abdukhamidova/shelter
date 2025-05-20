@@ -53,7 +53,8 @@ public class DogRepository {
     }
     public List<Dog> getUnadoptedFiltered(Integer breedId, String name, Integer sizeId,
                                           Integer furTypeId, String gender, String color,
-                                          LocalDate dateFrom, LocalDate dateTo) {
+                                          LocalDate dateFrom, LocalDate dateTo,
+                                          String sortField, String sortDir) {
 
         StringBuilder sql = new StringBuilder("SELECT * FROM dog WHERE adopterid IS NULL");
         List<Object> params = new ArrayList<>();
@@ -91,7 +92,20 @@ public class DogRepository {
             params.add(Date.valueOf(dateTo));
         }
 
+        if (sortField != null && !sortField.isBlank()) {
+            String direction = sortDir != null && sortDir.equalsIgnoreCase("desc") ? "DESC" : "ASC";
+
+            List<String> allowedFields = List.of(
+                    "name", "gender", "weight", "dateofarrival", "color",
+                    "furtypeid", "sizeid", "breedid"
+            );
+
+            if (allowedFields.contains(sortField.toLowerCase())) {
+                sql.append(" ORDER BY ").append(sortField).append(" ").append(direction);
+            }
+        }
         return jdbcTemplate.query(sql.toString(), params.toArray(), new DogRowMapper());
+
     }
 
 

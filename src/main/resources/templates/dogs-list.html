@@ -156,23 +156,39 @@
   <table th:if="${not #lists.isEmpty(dogViews)}">
     <thead>
     <tr>
-      <th>ID</th>
-      <th>Imię</th>
-      <th>Płeć</th>
-      <th>Waga</th>
-      <th>Uwagi</th>
-      <th>Data przyjęcia</th>
-      <th>Kolor</th>
-      <th>Typ sierści</th>
-      <th>Rozmiar</th>
-      <th>Rasa</th>
+      <th>Lp</th>
+
+      <th><a th:href="@{/dogs(sortField='name', sortDir=${sortField == 'name' and sortDir == 'asc' ? 'desc' : 'asc'}, name=${searchName}, breed=${selectedBreed}, size=${selectedSize}, furType=${selectedFurType}, gender=${selectedGender}, color=${selectedColor}, dateFrom=${selectedDateFrom}, dateTo=${selectedDateTo})}" class="sortable-header">Imię</a></th>
+
+      <th><a th:href="@{/dogs(sortField='gender', sortDir=${sortField == 'gender' and sortDir == 'asc' ? 'desc' : 'asc'}, name=${searchName}, breed=${selectedBreed}, size=${selectedSize}, furType=${selectedFurType}, gender=${selectedGender}, color=${selectedColor}, dateFrom=${selectedDateFrom}, dateTo=${selectedDateTo})}" class="sortable-header">Płeć</a></th>
+
+      <th class="wide-date" style="white-space: nowrap;">
+        <a th:href="@{/dogs(sortField='weight', sortDir=${sortField == 'weight' and sortDir == 'asc' ? 'desc' : 'asc'}, name=${searchName}, breed=${selectedBreed}, size=${selectedSize}, furType=${selectedFurType}, gender=${selectedGender}, color=${selectedColor}, dateFrom=${selectedDateFrom}, dateTo=${selectedDateTo})}" class="sortable-header">
+          Waga
+        </a>
+      </th>
+
+      <th class="wide-date"><a th:href="@{/dogs(sortField='specialnotes', sortDir=${sortField == 'specialnotes' and sortDir == 'asc' ? 'desc' : 'asc'}, name=${searchName}, breed=${selectedBreed}, size=${selectedSize}, furType=${selectedFurType}, gender=${selectedGender}, color=${selectedColor}, dateFrom=${selectedDateFrom}, dateTo=${selectedDateTo})}" class="sortable-header">Uwagi</a></th>
+
+      <th class="wide-date"><a th:href="@{/dogs(sortField='dateofarrival', sortDir=${sortField == 'dateofarrival' and sortDir == 'asc' ? 'desc' : 'asc'}, name=${searchName}, breed=${selectedBreed}, size=${selectedSize}, furType=${selectedFurType}, gender=${selectedGender}, color=${selectedColor}, dateFrom=${selectedDateFrom}, dateTo=${selectedDateTo})}" class="sortable-header">Data przyjęcia</a></th>
+
+      <th><a th:href="@{/dogs(sortField='color', sortDir=${sortField == 'color' and sortDir == 'asc' ? 'desc' : 'asc'}, name=${searchName}, breed=${selectedBreed}, size=${selectedSize}, furType=${selectedFurType}, gender=${selectedGender}, color=${selectedColor}, dateFrom=${selectedDateFrom}, dateTo=${selectedDateTo})}" class="sortable-header">Kolor</a></th>
+
+      <th class="wide-date"><a th:href="@{/dogs(sortField='furtypeid', sortDir=${sortField == 'furtypeid' and sortDir == 'asc' ? 'desc' : 'asc'}, name=${searchName}, breed=${selectedBreed}, size=${selectedSize}, furType=${selectedFurType}, gender=${selectedGender}, color=${selectedColor}, dateFrom=${selectedDateFrom}, dateTo=${selectedDateTo})}" class="sortable-header">Typ sierści</a></th>
+
+      <th><a th:href="@{/dogs(sortField='sizeid', sortDir=${sortField == 'sizeid' and sortDir == 'asc' ? 'desc' : 'asc'}, name=${searchName}, breed=${selectedBreed}, size=${selectedSize}, furType=${selectedFurType}, gender=${selectedGender}, color=${selectedColor}, dateFrom=${selectedDateFrom}, dateTo=${selectedDateTo})}" class="sortable-header">Rozmiar</a></th>
+
+      <th><a th:href="@{/dogs(sortField='breedid', sortDir=${sortField == 'breedid' and sortDir == 'asc' ? 'desc' : 'asc'}, name=${searchName}, breed=${selectedBreed}, size=${selectedSize}, furType=${selectedFurType}, gender=${selectedGender}, color=${selectedColor}, dateFrom=${selectedDateFrom}, dateTo=${selectedDateTo})}" class="sortable-header">Rasa</a></th>
+
       <th>Adoptuj</th>
       <th>Usuń</th>
     </tr>
+
+
     </thead>
     <tbody>
-    <tr th:each="view : ${dogViews}" th:onclick="|window.location.href='/dogs/' + ${view.dog.id}|" style="cursor: pointer;">
-      <td th:text="${view.dog.id}"></td>
+    <tr th:each="view, stat : ${dogViews}" th:onclick="|window.location.href='/dogs/' + ${view.dog.id}|" style="cursor: pointer;">
+      <td th:text="${stat.index + 1}"></td> <!-- numeracja psów w tabeli od 1 -->
       <td th:text="${view.dog.name}"></td>
       <td th:text="${view.dog.gender}"></td>
       <td th:text="${view.dog.weight} + ' kg'"></td>

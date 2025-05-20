@@ -23,7 +23,7 @@ public class AdopterRepository {
     }
 
     public int save(Adopter adopter) {
-        String sql = "INSERT INTO adopter (firstname, lastname, pesel, phone, city, postalcode, address) VALUES (?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO adopter (firstname, lastname, pesel, phone, city, postalcode, address, email) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
@@ -36,6 +36,7 @@ public class AdopterRepository {
             ps.setString(5, adopter.getCity());
             ps.setString(6, adopter.getPostalcode());
             ps.setString(7, adopter.getAddress());
+            ps.setString(8, adopter.getEmail());
 
             return ps;
         }, keyHolder);
