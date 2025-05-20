@@ -162,11 +162,7 @@
 
       <th><a th:href="@{/dogs(sortField='gender', sortDir=${sortField == 'gender' and sortDir == 'asc' ? 'desc' : 'asc'}, name=${searchName}, breed=${selectedBreed}, size=${selectedSize}, furType=${selectedFurType}, gender=${selectedGender}, color=${selectedColor}, dateFrom=${selectedDateFrom}, dateTo=${selectedDateTo})}" class="sortable-header">Płeć</a></th>
 
-      <th class="wide-date" style="white-space: nowrap;">
-        <a th:href="@{/dogs(sortField='weight', sortDir=${sortField == 'weight' and sortDir == 'asc' ? 'desc' : 'asc'}, name=${searchName}, breed=${selectedBreed}, size=${selectedSize}, furType=${selectedFurType}, gender=${selectedGender}, color=${selectedColor}, dateFrom=${selectedDateFrom}, dateTo=${selectedDateTo})}" class="sortable-header">
-          Waga
-        </a>
-      </th>
+      <th class="wide-date nowrap"><a th:href="@{/dogs(sortField='weight', sortDir=${sortField == 'weight' and sortDir == 'asc' ? 'desc' : 'asc'}, name=${searchName}, breed=${selectedBreed}, size=${selectedSize}, furType=${selectedFurType}, gender=${selectedGender}, color=${selectedColor}, dateFrom=${selectedDateFrom}, dateTo=${selectedDateTo})}" class="sortable-header">Waga</a></th>
 
       <th class="wide-date"><a th:href="@{/dogs(sortField='specialnotes', sortDir=${sortField == 'specialnotes' and sortDir == 'asc' ? 'desc' : 'asc'}, name=${searchName}, breed=${selectedBreed}, size=${selectedSize}, furType=${selectedFurType}, gender=${selectedGender}, color=${selectedColor}, dateFrom=${selectedDateFrom}, dateTo=${selectedDateTo})}" class="sortable-header">Uwagi</a></th>
 

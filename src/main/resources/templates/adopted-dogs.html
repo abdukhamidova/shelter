@@ -163,7 +163,6 @@
 
   <div class="chip-container" th:if="${not #maps.isEmpty(activeFilters)}">
 
-
     <form th:each="entry : ${activeFilters.entrySet()}" th:if="${entry.key != 'search'}" method="get" th:action="@{/adopted}">
       <input type="hidden" name="search" th:value="${search}" />
       <input type="hidden"
@@ -189,9 +188,9 @@
     <thead>
     <tr>
       <th>ID</th>
-      <th>Imię psa</th>
-      <th>Płeć</th>
-      <th>Rasa</th>
+      <th>Imię psa</a></th>
+      <th>Płeć</a></th>
+      <th>Rasa</a></th>
       <th>Adopter</th>
       <th>Email</th>
       <th>Telefon</th>

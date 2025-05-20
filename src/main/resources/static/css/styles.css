@@ -237,4 +237,7 @@ dialog#confirmDialog button[type="button"] {
     width: 140px;
     white-space: nowrap;
 }
+.nowrap {
+    white-space: nowrap;
+}
 
