@@ -45,7 +45,7 @@
     button {
       padding: 0.5rem 1rem;
       font-size: 1rem;
-      background-color: #4CAF50;
+      background-color: #6D4534;
       color: white;
       border: none;
       border-radius: 6px;
@@ -53,7 +53,7 @@
     }
 
     button:hover {
-      background-color: #45a049;
+      background-color: #955b46;
     }
 
     .reset-button {
@@ -103,7 +103,7 @@
     }
 
     .chip {
-      background-color: #84dd87;
+      background-color: #F3C07B;
       border-radius: 6px;
       padding: 0.4rem 0.8rem;
       display: flex;
@@ -140,6 +140,7 @@
       gap: 1rem;
       margin-top: 1rem;
     }
+
   </style>
 </head>
 
@@ -147,7 +148,10 @@
 
 <main layout:fragment="content">
 
-  <h1><img src="/css/images/adopted-dog-icon.png" alt="Adoptowane psy" style="height: 32px;"> Adoptowane psy</h1>
+  <div style="display: flex; justify-content: center;">
+    <h1 style="background-color: #b5775e; color: white; padding: 0.75rem; border-radius: 16px;
+               display: flex; align-items: center; gap: 0.5rem;"><img src="/css/images/adopted-dog-icon.png" alt="Adoptowane psy" style="height: 32px;"> Adoptowane psy</h1>
+  </div>
 
   <div class="filter-bar">
     <form class="filter-form" method="get" th:action="@{/adopted}" style="display: flex; gap: 1rem;">
@@ -237,7 +241,7 @@
       </label><br><br>
 
       <div class="dialog-actions">
-        <button type="submit">Filtruj</button>
+        <button >Filtruj</button>
         <button type="button" onclick="document.getElementById('dogFilterDialog').close()">Anuluj</button>
       </div>
     </form>

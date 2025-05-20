@@ -5,6 +5,15 @@
 <head>
   <meta charset="UTF-8">
   <title>Dog Details</title>
+  <script>
+    function confirmDelete(id, name) {
+      const dialog = document.getElementById('confirmDialog');
+      dialog.querySelector('#dogIdToDelete').value = id;
+      dialog.querySelector('#dogNameToDelete').textContent = name;
+      dialog.showModal();
+    }
+  </script>
+
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -26,7 +35,7 @@
       transform: translateY(-50%);
       font-size: 24px;
       cursor: pointer;
-      color: #4CAF50;
+      color: #6D4534;
     }
 
     h1 {
@@ -63,7 +72,7 @@
     }
 
     button {
-      background-color: #4CAF50;
+      background-color: #8a5743;
       color: white;
       border: none;
       padding: 10px 20px;
@@ -74,7 +83,7 @@
     }
 
     button:hover {
-      background-color: #45a049;
+      background-color: #6D4534;
     }
 
     .section {
@@ -83,7 +92,7 @@
 
     .section h3 {
       margin-top: 0;
-      color: #4CAF50;
+      color: #6D4534;
     }
 
     .required-label::before {
@@ -142,19 +151,32 @@
 <body>
 <main layout:fragment="content">
 <div class="header">
-  <h1>
+  <div style="display: flex; justify-content: center;">
+    <h1 style="background-color: #b5775e; color: white; padding: 0.75rem; border-radius: 16px;
+               display: flex; align-items: center; gap: 0.5rem;">
     <img src="/css/images/dog-icon.png" alt="Pies" style="height: 32px; vertical-align: middle; margin-right: 8px;" />
     <span th:text="${dog.name}">Imię psa</span>
   </h1>
-
-  <span class="gear" onclick="toggleEditMode()">&#9881;</span>
+  </div>
 </div>
 
 <form th:action="@{/edit}" method="post" th:object="${dog}">
   <input type="hidden" th:field="*{id}" />
 
   <div class="section">
-    <h3>Main Info</h3>
+    <div style="display: flex; align-items: center; justify-content: space-between;">
+      <h3></h3>
+      <div style="display: flex; gap: 0.5rem;">
+        <img src="/css/images/settings-icon.png" alt="Edytuj" title="Edytuj"
+             onclick="toggleEditMode()" style="height: 24px; cursor: pointer;" />
+
+        <a th:href="@{/adopt/{id}(id=${dog.id})}">
+          <img src="/css/images/adopt-dog-icon.png" alt="Adoptuj" title="Przenieś do adopcji"
+               style="height: 24px; cursor: pointer;" />
+        </a>
+      </div>
+    </div>
+
     <label for="name" class="required-label">Name:</label>
     <input type="text" id="name" th:field="*{name}" />
 
@@ -204,8 +226,28 @@
     </select>
   </div>
 
-  <button type="submit" id="editBtn" class="hidden">Zapisz</button>
+  <button type="button"
+          class="delete-button"
+          th:attr="data-id=${dog.id}, data-name=${dog.name}"
+          onclick="confirmDelete(this.dataset.id, this.dataset.name)">
+    Usuń
+  </button>
+
+
+  <h3></h3>
+  <button type="button" id="editBtn" class="hidden">Zapisz</button>
 </form>
+  <dialog id="confirmDialog">
+    <form method="post" th:action="@{/dogs/delete}">
+      <input type="hidden" name="id" id="dogIdToDelete" />
+      <p>Czy na pewno chcesz usunąć psa <strong id="dogNameToDelete"></strong>?</p>
+      <div class="dialog-actions" style="display: flex; justify-content: flex-end; gap: 1rem; margin-top: 1rem;">
+        <button type="submit" style="background-color: #aa3333;">Usuń</button>
+        <button type="button" onclick="document.getElementById('confirmDialog').close()">Anuluj</button>
+      </div>
+    </form>
+  </dialog>
+
 </main>
 </body>
 </html>

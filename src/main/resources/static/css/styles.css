@@ -1,6 +1,6 @@
 body {
     font-family: 'Segoe UI', sans-serif;
-    background-color: #f7f9fb;
+    background-color: #ffffff;
     margin: 0;
     padding: 2rem;
 }
@@ -24,18 +24,10 @@ input[type="text"], select {
     border-radius: 6px;
 }
 
-button {
-    padding: 0.5rem 1rem;
-    font-size: 1rem;
-    background-color: #4CAF50;
-    color: white;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-}
+
 
 button:hover {
-    background-color: #45a049;
+    background-color: #6D4534;
 }
 .chip,
 .reset-button {
@@ -48,7 +40,7 @@ button:hover {
 }
 
 .chip {
-    background-color: #84dd87;
+    background-color: #F3C07B;
     margin: 0.25rem;
     line-height: 1;
 }
@@ -111,7 +103,7 @@ thead {
 th, td {
     padding: 0.75rem;
     text-align: left;
-    border-bottom: 1px solid #ddd;
+    border-bottom: 1px solid #7e4c38;
 }
 
 tr:hover {
@@ -185,7 +177,7 @@ dialog#confirmDialog::backdrop {
     border: none;
     border-radius: 4px;
     cursor: pointer;
-    background-color: #45a049;
+    background-color: #6D4534;
     color: white;
 }
 
@@ -196,7 +188,7 @@ dialog#confirmDialog::backdrop {
 }
 
 .dialog-actions button[type="submit"] {
-    background-color: #45a049;
+    background-color: #6D4534;
 }
 
 dialog#revertDialog {
@@ -215,7 +207,7 @@ dialog#revertDialog::backdrop {
 }
 
 button[type="submit"] {
-    background-color: #45a049;
+    background-color: #6D4534;
     color: white;
     padding: 6px 12px;
     border-radius: 4px;
@@ -227,6 +219,6 @@ dialog#confirmDialog button[type="button"] {
     color: white !important;
 }
 .confirm-button {
-    background-color: #45a049;
+    background-color: #6D4534;
     color: white;
 }

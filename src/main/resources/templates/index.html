@@ -5,15 +5,52 @@
 
 <head>
     <title>Lista psów</title>
+    <style>
+        button {
+            padding: 0.5rem 1rem;
+            font-size: 1rem;
+            background-color: #6D4534;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #955b46;
+        }
+        .chip {
+            background-color: #F3C07B;
+            border-radius: 6px;
+            padding: 0.4rem 0.8rem;
+            display: flex;
+            align-items: center;
+            font-size: 1rem;
+        }
+
+        .chip button {
+            background: none;
+            border: none;
+            margin-left: 0.5rem;
+            font-weight: bold;
+            font-size: 1rem;
+            cursor: pointer;
+            color: #444;
+        }
+
+    </style>
 
 </head>
 
 <body>
 <main layout:fragment="content">
 
-    <h1>
+    <div style="display: flex; justify-content: center;">
+        <h1 style="background-color: #b5775e; color: white; padding: 0.75rem; border-radius: 16px;
+               display: flex; align-items: center; gap: 0.5rem;">
         <img src="/css/images/dog-icon.png" alt="Pies" style="height: 32px;">
         Lista psów dostępnych do adopcji</h1>
+    </div>
 
     <div class="filter-bar">
         <form method="get" th:action="@{/}" style="display: flex; gap: 1rem;">
@@ -100,7 +137,7 @@
             </label>
 
             <div class="dialog-actions">
-                <button type="submit">Filtruj</button>
+                <button >Filtruj</button>
                 <button type="button" onclick="document.getElementById('filterDialog').close()">Anuluj</button>
             </div>
         </form>

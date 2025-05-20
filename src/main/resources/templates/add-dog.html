@@ -48,7 +48,7 @@
         }
 
         button {
-            background-color: #4CAF50;
+            background-color: #6D4534;
             color: white;
             border: none;
             padding: 10px 20px;
@@ -59,7 +59,7 @@
         }
 
         button:hover {
-            background-color: #45a049;
+            background-color: #6D4534;
         }
 
         .section {
@@ -68,21 +68,27 @@
 
         .section h3 {
             margin-top: 0;
-            color: #4CAF50;
+            color: #6D4534;
         }
 
         .required-label::before {
             content: " *";
-            color: red;
+            color: #CA0B4A;
         }
     </style>
 </head>
 <body>
 <main layout:fragment="content">
-<h1><img src="/css/images/add-dog-item.png" alt="Dodaj psa" style="height: 32px;">
-    Dodaj nowego psa</h1>
+    <div style="display: flex; justify-content: center;">
+        <h1 style="background-color: #b5775e; color: white; padding: 0.75rem; border-radius: 16px;
+               display: flex; align-items: center; gap: 0.5rem;">
+            <img src="/css/images/add-dog-item.png" alt="Dodaj psa" style="height: 32px;">
+            Dodaj nowego psa
+        </h1>
+    </div>
 
-<form th:action="@{/add}" th:object="${dog}" method="post">
+
+    <form th:action="@{/add}" th:object="${dog}" method="post">
     <div class="section">
         <h3>Main Info</h3>
         <label for="name" class="required-label">Name:</label>
