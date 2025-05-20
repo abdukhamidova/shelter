@@ -39,7 +39,7 @@
     }
 
     input[type="text"], input[type="email"], input[type="number"] {
-      width: 100%;
+      width: calc(100% - 20px);
       padding: 10px;
       margin-top: 5px;
       border-radius: 4px;
@@ -86,6 +86,11 @@
     .readonly p {
       margin: 5px 0;
     }
+
+    .required-label::before {
+      content: " *";
+      color: #CA0B4A;
+    }
   </style>
   <script>
     function formatPostalCode(input) {
@@ -122,7 +127,7 @@
 
 
     <div class="section">
-      <h3>Informacje główne</h3>
+      <h3>Podstawowe informacje</h3>
       <p><strong>Płeć:</strong> <span th:text="${dog.gender}"></span></p>
       <p><strong>Waga:</strong> <span th:text="${dog.weight} + ' kg'"></span></p>
       <p><strong>Uwagi:</strong> <span th:text="${dog.specialnotes}"></span></p>
@@ -161,20 +166,20 @@
     <form th:if="${showForm}" th:action="@{/adopt/{id}(id=${dog.id})}" th:object="${adopter}" method="post" style="margin-top: 2rem;">
       <input type="hidden" th:field="*{pesel}" />
 
-      <label for="firstname">Imię:</label>
+      <label for="firstname" class="required-label">Imię:</label>
       <input type="text" id="firstname" th:field="*{firstname}"
              pattern="[A-Za-zĄąĆćĘęŁłŃńÓóŚśŹźŻż]+" title="Tylko litery bez cyfr"
              placeholder="Podaj imię"
              required th:readonly="${adopter.id != null}" oninput="this.value = this.value.replace(/[^A-Za-zĄąĆćĘęŁłŃńÓóŚśŹźŻż]/g, '')" />
 
 
-      <label for="lastname">Nazwisko:</label>
+      <label for="lastname" class="required-label">Nazwisko:</label>
       <input type="text" id="lastname" th:field="*{lastname}"
              pattern="[A-Za-zĄąĆćĘęŁłŃńÓóŚśŹźŻż]+" title="Tylko litery bez cyfr"
              placeholder="Podaj nazwisko"
              required th:readonly="${adopter.id != null}" oninput="this.value = this.value.replace(/[^A-Za-zĄąĆćĘęŁłŃńÓóŚśŹźŻż]/g, '')" />
 
-      <label for="phone">Telefon:</label>
+      <label for="phone" class="required-label">Telefon:</label>
       <input type="text" id="phone" th:field="*{phone}"
              maxlength="11" required
              pattern="\d{3} \d{3} \d{3}" title="Telefon w formacie xxx xxx xxx"
@@ -187,13 +192,13 @@
              placeholder="Podaj adres email"
              th:readonly="${adopter.id != null}" />
 
-      <label for="city">Miasto:</label>
+      <label for="city" class="required-label">Miasto:</label>
       <input type="text" id="city" th:field="*{city}"
              pattern="[A-Za-zĄąĆćĘęŁłŃńÓóŚśŹźŻż]+" title="Tylko litery bez cyfr"
              placeholder="Podaj miato"
              required th:readonly="${adopter.id != null}" oninput="this.value = this.value.replace(/[^A-Za-zĄąĆćĘęŁłŃńÓóŚśŹźŻż]/g, '')" />
 
-      <label for="postalcode">Kod pocztowy:</label>
+      <label for="postalcode" class="required-label">Kod pocztowy:</label>
       <input type="text" id="postalcode" th:field="*{postalcode}"
              maxlength="6" required
              pattern="\d{2}-\d{3}" title="Kod pocztowy w formacie 00-000"
@@ -201,7 +206,7 @@
              oninput="formatPostalCode(this)" th:readonly="${adopter.id != null}" />
 
 
-      <label for="address">Adres:</label>
+      <label for="address" class="required-label">Adres:</label>
       <input type="text" id="address" th:field="*{address}"
              placeholder="Podaj adres"
              required th:readonly="${adopter.id != null}" />

@@ -286,7 +286,7 @@ public class DogController {
         dog.setAdopterid(adopterId);
         dogRepository.updateDogAdopter(dog);
 
-        return "redirect:/dogs";
+        return "redirect:/adopted";
     }
 
 
