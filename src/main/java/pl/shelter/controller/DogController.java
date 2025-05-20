@@ -35,6 +35,8 @@ public class DogController {
         model.addAttribute("furTypes", furTypeRepository.getAll());
         model.addAttribute("sizes", sizeRepository.getAll());
         model.addAttribute("breeds", breedRepository.getAll());
+
+
         return "add-dog";
     }
     @PostMapping("/add")

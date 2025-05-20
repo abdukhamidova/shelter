@@ -5,7 +5,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Add dog</title>
+    <title>Dodaj psa</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -80,24 +80,29 @@
 <body>
 <main layout:fragment="content">
 <h1><img src="/css/images/add-dog-item.png" alt="Dodaj psa" style="height: 32px;">
-    Add a new dog</h1>
+    Dodaj nowego psa</h1>
 
 <form th:action="@{/add}" th:object="${dog}" method="post">
     <div class="section">
         <h3>Main Info</h3>
         <label for="name" class="required-label">Name:</label>
-        <input type="text" id="name" th:field="*{name}" placeholder="Enter name" required="required" />
+        <input type="text" id="name" th:field="*{name}"
+               placeholder="Podaj imię"
+               pattern="[A-Za-zĄąĆćĘęŁłŃńÓóŚśŹźŻż]+" title="Tylko litery bez cyfr"
+               required="required" oninput="this.value = this.value.replace(/[^A-Za-zĄąĆćĘęŁłŃńÓóŚśŹźŻż]/g, '')" />
 
         <label class="required-label">Gender:
             <input type="radio" th:field="*{gender}" value="MALE" /> Male
             <input type="radio" th:field="*{gender}" value="FEMALE" /> Female
         </label><br/>
 
-        <label for="weight" class="required-label">Weight:</label>
-        <input type="number" id="weight" step="0.1" th:field="*{weight}" placeholder="Enter weight" required="required"/>
+        <label for="weight" class="required-label">Waga:</label>
+        <input type="number" id="weight" step="0.1" min="0.5"
+               th:field="*{weight}" placeholder="Podaj wagę" required />
+
 
         <label for="specialnotes">Special Notes:</label>
-        <input type="text" id="specialnotes" th:field="*{specialnotes}" placeholder="Enter special notes" />
+        <input type="text" id="specialnotes" th:field="*{specialnotes}" placeholder="Podaj dodatkowy opis" />
 
         <label for="dateofarrival" class="required-label">Date of Arrival:</label>
         <input type="date" id="dateofarrival" th:field="*{dateofarrival}" required="required"/>
@@ -106,7 +111,7 @@
     <div class="section">
         <h3>Characteristics:</h3>
         <label for="color" class="required-label">Color:</label>
-        <input type="text" id="color" th:field="*{color}" placeholder="Enter color" required="required"/>
+        <input type="text" id="color" th:field="*{color}" placeholder="Podaj kolor" required="required"/>
 
         <label for="furtypeid" class="required-label">Fur Type:</label>
         <select id="furtypeid" th:field="*{furtypeid}" required="required">

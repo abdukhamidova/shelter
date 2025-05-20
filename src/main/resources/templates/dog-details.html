@@ -142,7 +142,11 @@
 <body>
 <main layout:fragment="content">
 <div class="header">
-  <h1 th:text="'🐶 ' + ${dog.name}"></h1>
+  <h1>
+    <img src="/css/images/dog-icon.png" alt="Pies" style="height: 32px; vertical-align: middle; margin-right: 8px;" />
+    <span th:text="${dog.name}">Imię psa</span>
+  </h1>
+
   <span class="gear" onclick="toggleEditMode()">&#9881;</span>
 </div>
 
